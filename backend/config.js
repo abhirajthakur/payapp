@@ -1,4 +1,5 @@
 module.exports = {
-  JWT_SECRET: "", // Enter the secret used to sign and verify the token
-  MONGODB_CONNECTION_STRING: "" // Enter the MongoDB connection string here
+  JWT_SECRET: "PaTyM_S3Cr3t",
+  MONGODB_CONNECTION_STRING:
+    "mongodb+srv://admin:TEmTnHSj7SPw0Pw0@cluster0.ehvnmfv.mongodb.net/paytm?retryWrites=true&w=majority",
 };
