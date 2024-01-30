@@ -134,13 +134,18 @@ router.get("/bulk", async (req, res) => {
   });
 
   res.json({
-    user: users.map((user) => ({
+    users: users.map((user) => ({
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       _id: user._id,
     })),
   });
+});
+
+router.get("/me", authMiddleware, async (req, res) => {
+  const user = await User.findById(req.userId).select("-passwordHash -__v");
+  res.json({ user });
 });
 
 module.exports = router;
