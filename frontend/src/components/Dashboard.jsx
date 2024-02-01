@@ -78,7 +78,6 @@ function Dashboard() {
     } else {
       getBalance();
     }
-    console.log("Dashboard User", user);
   }, [user]);
 
   useEffect(() => {

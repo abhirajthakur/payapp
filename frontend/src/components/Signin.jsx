@@ -13,8 +13,8 @@ function Signin() {
   const onSubmit = async (userData) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/api/v1/user/signin`,
-        { email: userData.email, password: userData.password },
+        "http://localhost:3000/api/v1/user/signin",
+        userData,
       );
 
       const userResponse = await axios.get(
