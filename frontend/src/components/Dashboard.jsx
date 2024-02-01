@@ -6,31 +6,18 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoHomeOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { userState } from "../store/atoms/user.jsx";
-import LogoutButton from "./LogoutButton.jsx";
+import { userState } from "../store/atoms/user";
+import useDebounce from "./Debounce";
+import LogoutButton from "./LogoutButton";
 
 function Dashboard() {
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
   const [balance, setBalance] = useState();
   const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState("");
+  const debouncedValue = useDebounce(filter, 500);
   const { register, handleSubmit } = useForm();
-
-  const getBalance = async () => {
-    try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/v1/account/balance",
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        },
-      );
-      setBalance(data.balance.toFixed(2));
-    } catch (err) {
-      console.log("Getting user balance error", err);
-    }
-  };
 
   const filterUsers = async (filter) => {
     if (filter.length === 0) {
@@ -49,6 +36,22 @@ function Dashboard() {
       setUsers(data.users);
     } catch (err) {
       console.log("Filter users error", err);
+    }
+  };
+
+  const getBalance = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/v1/account/balance",
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        },
+      );
+      setBalance(data.balance.toFixed(2));
+    } catch (err) {
+      console.log("Getting user balance error", err);
     }
   };
 
@@ -75,7 +78,12 @@ function Dashboard() {
     } else {
       getBalance();
     }
+    console.log("Dashboard User", user);
   }, [user]);
+
+  useEffect(() => {
+    filterUsers(filter);
+  }, [debouncedValue]);
 
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr] bg-gray-50">
@@ -164,14 +172,14 @@ function Dashboard() {
                         className="shadow-sm flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         placeholder="Search users..."
                         {...register("receiver", {
-                          onChange: (e) => filterUsers(e.target.value),
+                          onChange: (e) => setFilter(e.target.value),
                         })}
                       />
                       {users.length !== 0 && (
                         <div className="shadow-sm w-full rounded-md border border-gray-200 overflow-y-auto overflow-x-clip">
                           {users.map((user) => (
                             <div
-                              className="flex h-8 w-full border-y border-gray-200 bg-white px-3 py-1 text-sm"
+                              className="flex h-8 w-full cursor-pointer border-y border-gray-200 bg-white px-3 py-1 text-sm"
                               key={user._id}
                             >
                               {user.firstName} {user.lastName}
