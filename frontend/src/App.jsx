@@ -11,10 +11,30 @@ import Dashboard from "./components/Dashboard";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
 import UpdateProfile from "./components/UpdateProfile";
+import { userState } from "./store/atoms/user";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
 export default function App() {
+  const setUser = useSetRecoilState(userState);
+
+  async function getUser() {
+    try {
+      const { data } = await axios.get("http://localhost:3000/api/v1/user/me", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      setUser(data.user);
+    } catch (err) {
+      setUser({});
+    }
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return <RouterProvider router={router} />;
 }
 

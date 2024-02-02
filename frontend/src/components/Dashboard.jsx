@@ -12,12 +12,13 @@ import LogoutButton from "./LogoutButton";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const user = useRecoilValue(userState);
+  const currentUser = useRecoilValue(userState);
   const [balance, setBalance] = useState();
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
+  const [receiverId, setReceiverId] = useState("");
   const debouncedValue = useDebounce(filter, 500);
-  const { register, handleSubmit } = useForm();
+  const { register, setValue, handleSubmit } = useForm();
 
   const filterUsers = async (filter) => {
     if (filter.length === 0) {
@@ -56,10 +57,11 @@ function Dashboard() {
   };
 
   const transferMoney = async (transferData) => {
+    console.log(transferData);
     try {
       const { data } = await axios.post(
         "http://localhost:3000/api/v1/account/transfer",
-        { to: transferData.receiver, amount: transferData.amount },
+        { to: receiverId, amount: transferData.amount },
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -67,18 +69,19 @@ function Dashboard() {
         },
       );
       console.log(data);
+      await getBalance();
     } catch (err) {
       console.log("Tranfer Error", err);
     }
   };
 
   useEffect(() => {
-    if (Object.keys(user).length === 0) {
+    if (Object.keys(currentUser).length === 0) {
       navigate("/signin");
     } else {
       getBalance();
     }
-  }, [user]);
+  }, [currentUser]);
 
   useEffect(() => {
     filterUsers(filter);
@@ -132,7 +135,7 @@ function Dashboard() {
             <h1 className="font-semibold text-3xl md:text-3xl text-gray-800">
               Welcome,{" "}
               <span className="font-normal text-gray-500">
-                {user.firstName} {user.lastName}
+                {currentUser.firstName} {currentUser.lastName}
               </span>
             </h1>
           </div>
@@ -146,8 +149,9 @@ function Dashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center p-3 rounded-b bg-gray-100">
-                  <h2 className="text-4xl font-bold text-gray-800">₹</h2>
+                <div className="flex items-center p-3 gap-1 rounded-b bg-gray-100">
+                  {/* <h2 className="text-4xl font-bold text-gray-800">₹</h2> */}
+                  <FaIndianRupeeSign className="text-2xl" />
                   <span className="text-2xl">{balance}</span>
                 </div>
               </div>
@@ -180,6 +184,12 @@ function Dashboard() {
                             <div
                               className="flex h-8 w-full cursor-pointer border-y border-gray-200 bg-white px-3 py-1 text-sm"
                               key={user._id}
+                              onClick={() => {
+                                const userName = `${user.firstName} ${user.lastName}`;
+                                setValue("receiver", userName);
+                                setReceiverId(user._id);
+                                setUsers([]);
+                              }}
                             >
                               {user.firstName} {user.lastName}
                             </div>
