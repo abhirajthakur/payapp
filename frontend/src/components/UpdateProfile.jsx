@@ -1,10 +1,46 @@
+import axios from "axios";
+import { useForm } from "react-hook-form";
 import { FaUser } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoHomeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import LogoutButton from "./LogoutButton";
+import { useSetRecoilState } from "recoil";
+import { userState } from "../store/atoms/user";
 
 function UpdateProfile() {
+  const { register, handleSubmit } = useForm();
+  const setUser = useSetRecoilState(userState);
+
+  async function getUser() {
+    try {
+      const { data } = await axios.get("http://localhost:3000/api/v1/user/me", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      setUser(data.user);
+    } catch (err) {
+      setUser({});
+    }
+  }
+
+  async function updateProfile(updateData) {
+    console.log(updateData);
+    try {
+      await axios.put("http://localhost:3000/api/v1/user/", updateData, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+
+      alert("Profile successfully updated");
+      await getUser();
+    } catch (err) {
+      console.log("Update profile error", err);
+    }
+  }
+
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr] bg-gray-50">
       <div className="hidden border-r bg-gray-200/40 lg:block">
@@ -53,16 +89,19 @@ function UpdateProfile() {
           <div className="flex items-center">
             <h1 className="font-semibold text-lg md:text-2xl">Profile</h1>
           </div>
-          <div className="flex flex-col md:grid md:grid-cols-6 gap-6">
+          <div className="flex flex-col md:grid gap-6">
             <div className="col-span-3 flex flex-col gap-6">
-              <div className="rounded-lg bg-white text-gray-950 shadow-sm">
+              <div className="rounded-lg bg-white text-gray-950 shadow-lg">
                 <div className="flex flex-col space-y-1.5 p-3 bg-gray-200 rounded-t-lg">
                   <h3 className="text-2xl font-semibold leading-none tracking-tight">
                     Personal Information
                   </h3>
                 </div>
                 <div className="p-6 pt-3">
-                  <form className="space-y-5">
+                  <form
+                    onSubmit={handleSubmit(updateProfile)}
+                    className="space-y-5"
+                  >
                     <div className="space-y-2">
                       <div className="space-y-1">
                         <label className="text-sm font-medium leading-none text-gray-800 peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -70,8 +109,8 @@ function UpdateProfile() {
                         </label>
                         <input
                           className="shadow-sm flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          id="firstName"
                           placeholder="Enter your first name"
+                          {...register("firstName")}
                         />
                       </div>
                       <div className="space-y-1">
@@ -80,42 +119,28 @@ function UpdateProfile() {
                         </label>
                         <input
                           className="shadow-sm flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          id="receiver"
                           placeholder="Enter your last name"
+                          {...register("lastName")}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium leading-none text-gray-800 peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                          New Password
+                        </label>
+                        <input
+                          className="shadow-sm flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          placeholder="Enter new password"
+                          {...register("newPassword")}
                         />
                       </div>
                     </div>
 
-                    <button className="rounded-md bg-gray-800 text-white hover:bg-gray-700 hover:bg-gray-900/90 h-10 px-4 py-2">
+                    <button
+                      className="rounded-md bg-gray-800 text-white hover:bg-gray-700 hover:bg-gray-900/90 h-10 px-4 py-2"
+                      type="submit"
+                    >
                       Update
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-span-3 flex flex-col gap-6">
-              <div className="rounded-lg border border-gray-200 bg-white text-gray-950 shadow-sm">
-                <div className="flex flex-col space-y-1.5 p-3 bg-gray-200 rounded-t-lg">
-                  <h3 className="text-2xl font-semibold leading-none tracking-tight">
-                    Change Password
-                  </h3>
-                </div>
-                <div className="p-6 pt-3">
-                  <form className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium leading-none text-gray-800 peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        New Password
-                      </label>
-                      <input
-                        className="shadow-sm flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        id="newPassword"
-                        placeholder="Enter new password"
-                      />
-                    </div>
-
-                    <button className="rounded-md bg-gray-800 text-white hover:bg-gray-700 hover:bg-gray-900/90 h-10 px-4 py-2">
-                      Change Password
                     </button>
                   </form>
                 </div>
