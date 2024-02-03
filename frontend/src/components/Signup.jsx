@@ -2,8 +2,10 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { useRecoilState } from "recoil";
 import { userState } from "../store/atoms/user";
+import { notifyError } from "./Nofity";
 
 function Signup() {
   const { register, handleSubmit } = useForm();
@@ -31,6 +33,7 @@ function Signup() {
       navigate("/dashboard");
     } catch (err) {
       console.log("Signup error", err);
+      notifyError(err.response.data.message);
     }
   };
 
@@ -98,6 +101,7 @@ function Signup() {
             >
               Sign Up
             </button>
+            <ToastContainer />
           </div>
         </form>
 

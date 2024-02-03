@@ -4,9 +4,11 @@ import { FaUser } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoHomeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
+import { ToastContainer } from "react-toastify";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../store/atoms/user";
+import LogoutButton from "./LogoutButton";
+import { notifyError, notifySuccess } from "./Nofity";
 
 function UpdateProfile() {
   const { register, handleSubmit } = useForm();
@@ -22,22 +24,27 @@ function UpdateProfile() {
       setUser(data.user);
     } catch (err) {
       setUser({});
+      notifyError(err.response.data.message);
     }
   }
 
   async function updateProfile(updateData) {
-    console.log(updateData);
     try {
-      await axios.put("http://localhost:3000/api/v1/user/", updateData, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
+      const { data } = await axios.put(
+        "http://localhost:3000/api/v1/user/",
+        updateData,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
         },
-      });
+      );
 
-      alert("Profile successfully updated");
+      notifySuccess(data.message);
       await getUser();
     } catch (err) {
       console.log("Update profile error", err);
+      notifyError(err.response.data.message);
     }
   }
 
@@ -142,6 +149,7 @@ function UpdateProfile() {
                     >
                       Update
                     </button>
+                    <ToastContainer />
                   </form>
                 </div>
               </div>

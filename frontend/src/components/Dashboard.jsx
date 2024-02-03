@@ -5,10 +5,12 @@ import { FaUser } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoHomeOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { useRecoilValue } from "recoil";
 import { userState } from "../store/atoms/user";
 import useDebounce from "./Debounce";
 import LogoutButton from "./LogoutButton";
+import { notifyError, notifySuccess } from "./Nofity";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ function Dashboard() {
       setUsers(data.users);
     } catch (err) {
       console.log("Filter users error", err);
+      notifyError(err.response.data.message);
     }
   };
 
@@ -53,25 +56,28 @@ function Dashboard() {
       setBalance(data.balance.toFixed(2));
     } catch (err) {
       console.log("Getting user balance error", err);
+      notifyError(err.response.data.message);
     }
   };
 
   const transferMoney = async (transferData) => {
-    console.log(transferData);
-    try {
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/account/transfer",
-        { to: receiverId, amount: transferData.amount },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
+    if (transferData.receiver) {
+      try {
+        const { data } = await axios.post(
+          "http://localhost:3000/api/v1/account/transfer",
+          { to: receiverId, amount: transferData.amount },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
           },
-        },
-      );
-      console.log(data);
-      await getBalance();
-    } catch (err) {
-      console.log("Tranfer Error", err);
+        );
+
+        notifySuccess(data.message);
+        await getBalance();
+      } catch (err) {
+        notifyError(err.response.data.message);
+      }
     }
   };
 
@@ -208,9 +214,13 @@ function Dashboard() {
                         {...register("amount", { required: true })}
                       />
                     </div>
-                    <button className="rounded-md bg-gray-800 text-white hover:bg-gray-700 hover:bg-gray-900/90 h-10 px-4 py-2">
+                    <button
+                      className="rounded-md bg-gray-800 text-white hover:bg-gray-700 hover:bg-gray-900/90 h-10 px-4 py-2"
+                      type="submit"
+                    >
                       Send
                     </button>
+                    <ToastContainer />
                   </form>
                 </div>
               </div>
