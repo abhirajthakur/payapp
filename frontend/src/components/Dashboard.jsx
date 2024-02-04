@@ -14,7 +14,7 @@ import { notifyError, notifySuccess } from "./Nofity";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const currentUser = useRecoilValue(userState);
+  const user = useRecoilValue(userState);
   const [balance, setBalance] = useState();
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
@@ -82,12 +82,12 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    if (Object.keys(currentUser).length === 0) {
+    if (Object.keys(user).length === 0) {
       navigate("/signin");
     } else {
       getBalance();
     }
-  }, [currentUser]);
+  }, [user]);
 
   useEffect(() => {
     filterUsers(filter);
@@ -141,7 +141,7 @@ function Dashboard() {
             <h1 className="font-semibold text-3xl md:text-3xl text-gray-800">
               Welcome,{" "}
               <span className="font-normal text-gray-500">
-                {currentUser.firstName} {currentUser.lastName}
+                {user.firstName} {user.lastName}
               </span>
             </h1>
           </div>

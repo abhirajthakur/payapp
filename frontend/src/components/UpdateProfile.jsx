@@ -5,28 +5,11 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoHomeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useSetRecoilState } from "recoil";
-import { userState } from "../store/atoms/user";
 import LogoutButton from "./LogoutButton";
 import { notifyError, notifySuccess } from "./Nofity";
 
 function UpdateProfile() {
   const { register, handleSubmit } = useForm();
-  const setUser = useSetRecoilState(userState);
-
-  async function getUser() {
-    try {
-      const { data } = await axios.get("http://localhost:3000/api/v1/user/me", {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-      setUser(data.user);
-    } catch (err) {
-      setUser({});
-      notifyError(err.response.data.message);
-    }
-  }
 
   async function updateProfile(updateData) {
     try {
@@ -41,7 +24,6 @@ function UpdateProfile() {
       );
 
       notifySuccess(data.message);
-      await getUser();
     } catch (err) {
       console.log("Update profile error", err);
       notifyError(err.response.data.message);
@@ -138,7 +120,7 @@ function UpdateProfile() {
                         <input
                           className="shadow-sm flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           placeholder="Enter new password"
-                          {...register("newPassword")}
+                          {...register("password")}
                         />
                       </div>
                     </div>

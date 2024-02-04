@@ -21,9 +21,9 @@ const signinSchema = zod.object({
 });
 
 const updateSchema = zod.object({
-  password: zod.string().min(8).optional(),
   firstName: zod.string().optional(),
   lastName: zod.string().optional(),
+  password: zod.string().min(8).optional(),
 });
 
 router.post("/signup", async (req, res) => {
