@@ -25,8 +25,13 @@ function UpdateProfile() {
 
       notifySuccess(data.message);
     } catch (err) {
-      console.log("Update profile error", err);
-      notifyError(err.response.data.message);
+      if (err.response) {
+        notifyError(err.response.data.message);
+      } else if (err.request) {
+        notifyError(err.response.responseText);
+      } else {
+        notifyError(err);
+      }
     }
   }
 

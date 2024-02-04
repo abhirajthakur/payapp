@@ -32,8 +32,13 @@ function Signup() {
       localStorage.setItem("token", data.token);
       navigate("/dashboard");
     } catch (err) {
-      console.log("Signup error", err);
-      notifyError(err.response.data.message);
+      if (err.response) {
+        notifyError(err.response.data.message);
+      } else if (err.request) {
+        notifyError(err.response.responseText);
+      } else {
+        notifyError(err);
+      }
     }
   };
 

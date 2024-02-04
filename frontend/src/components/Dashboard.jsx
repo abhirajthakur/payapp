@@ -38,8 +38,13 @@ function Dashboard() {
       );
       setUsers(data.users);
     } catch (err) {
-      console.log("Filter users error", err);
-      notifyError(err.response.data.message);
+      if (err.response) {
+        notifyError(err.response.data.message);
+      } else if (err.request) {
+        notifyError(err.response.responseText);
+      } else {
+        notifyError(err);
+      }
     }
   };
 
@@ -55,8 +60,13 @@ function Dashboard() {
       );
       setBalance(data.balance.toFixed(2));
     } catch (err) {
-      console.log("Getting user balance error", err);
-      notifyError(err.response.data.message);
+      if (err.response) {
+        notifyError(err.response.data.message);
+      } else if (err.request) {
+        notifyError(err.response.responseText);
+      } else {
+        notifyError(err);
+      }
     }
   };
 
@@ -76,7 +86,13 @@ function Dashboard() {
         notifySuccess(data.message);
         await getBalance();
       } catch (err) {
-        notifyError(err.response.data.message);
+        if (err.response) {
+          notifyError(err.response.data.message);
+        } else if (err.request) {
+          notifyError(err.response.responseText);
+        } else {
+          notifyError(err);
+        }
       }
     }
   };
