@@ -1,18 +1,20 @@
 const mongoose = require("mongoose");
-const { MONGODB_CONNECTION_STRING } = require("./config");
+require("dotenv").config();
 
-mongoose.connect(MONGODB_CONNECTION_STRING);
+
+console.log(process.env.MONGODB_CONNECTION_STRING)
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
 
 const accountSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  balance: Number,
+	userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+	balance: Number,
 });
 
 const userSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  passwordHash: String,
+	firstName: String,
+	lastName: String,
+	email: String,
+	passwordHash: String,
 });
 
 const User = mongoose.model("User", userSchema);
