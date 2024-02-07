@@ -20,7 +20,9 @@ export default function App() {
 
   async function getUser() {
     try {
-      const { data } = await axios.get("http://localhost:3000/api/v1/user/me", {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_ROUTE}/api/v1/user/me`,
+        {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

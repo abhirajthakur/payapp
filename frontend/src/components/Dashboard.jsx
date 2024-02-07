@@ -29,7 +29,7 @@ function Dashboard() {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/api/v1/user/bulk?filter=${filter}`,
+        `${import.meta.env.VITE_BACKEND_ROUTE}/api/v1/user/bulk?filter=${filter}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -51,7 +51,7 @@ function Dashboard() {
   const getBalance = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:3000/api/v1/account/balance",
+        `${import.meta.env.VITE_BACKEND_ROUTE}/api/v1/account/balance`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -74,7 +74,7 @@ function Dashboard() {
     if (transferData.receiver) {
       try {
         const { data } = await axios.post(
-          "http://localhost:3000/api/v1/account/transfer",
+          `${import.meta.env.VITE_BACKEND_ROUTE}/api/v1/account/transfer`,
           { to: receiverId, amount: transferData.amount },
           {
             headers: {

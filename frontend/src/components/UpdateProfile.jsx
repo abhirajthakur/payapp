@@ -14,7 +14,7 @@ function UpdateProfile() {
   async function updateProfile(updateData) {
     try {
       const { data } = await axios.put(
-        "http://localhost:3000/api/v1/user/",
+        `${import.meta.env.VITE_BACKEND_ROUTE}/api/v1/user`,
         updateData,
         {
           headers: {
