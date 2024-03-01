@@ -125,7 +125,7 @@ router.put("/", authMiddleware, async (req, res) => {
   res.json({ message: "Updated successfully" });
 });
 
-router.get("/bulk", async (req, res) => {
+router.get("/bulk", authMiddleware, async (req, res) => {
   const filter = req.query.filter || "";
 
   const users = await User.find({
@@ -136,12 +136,14 @@ router.get("/bulk", async (req, res) => {
   });
 
   res.json({
-    users: users.map((user) => ({
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      _id: user._id,
-    })),
+    users: users
+      .filter((user) => user._id != req.userId)
+      .map((user) => ({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        _id: user._id,
+      })),
   });
 });
 
