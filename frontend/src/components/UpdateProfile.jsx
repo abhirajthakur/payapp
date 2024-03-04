@@ -5,11 +5,31 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoHomeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useRecoilState } from "recoil";
+import { userState } from "../store/atoms/user";
 import LogoutButton from "./LogoutButton";
 import { notifyError, notifySuccess } from "./Nofity";
+import { useEffect } from "react";
 
 function UpdateProfile() {
   const { register, handleSubmit } = useForm();
+  const [user, setUser] = useRecoilState(userState);
+
+  async function getUser() {
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_ROUTE}/api/v1/user/me`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        },
+      );
+      setUser(data.user);
+    } catch (err) {
+      setUser({});
+    }
+  }
 
   async function updateProfile(updateData) {
     try {
@@ -35,27 +55,32 @@ function UpdateProfile() {
     }
   }
 
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr] bg-gray-50">
       <div className="hidden border-r bg-gray-200/40 lg:block">
-        <div className="flex h-full max-h-screen flex-col gap-2">
+        <div className="flex h-full max-h-screen flex-col">
           <div className="flex h-[60px] items-center border-b px-6 bg-gray-100">
             <Link className="flex items-center gap-2 font-semibold text-lg text-gray-800">
               <FaIndianRupeeSign />
               <span>PayApp</span>
             </Link>
           </div>
-          <div className="flex-1 overflow-auto py-2">
+
+          <div className="flex-1 overflow-auto py-2 bg-gray-800">
             <nav className="grid items-start px-4 text-sm font-medium">
               <Link
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-400"
                 to={"/dashboard"}
               >
                 <IoHomeOutline />
                 Dashboard
               </Link>
 
-              <Link className="flex items-center gap-3 rounded-lg bg-gray-200 px-3 py-2 text-gray-900  transition-all hover:text-gray-900">
+              <Link className="flex items-center gap-3 rounded-lg bg-gray-700 px-3 py-2 text-white">
                 <FaUser />
                 Update Profile
               </Link>
@@ -75,16 +100,15 @@ function UpdateProfile() {
               Update Profile
             </h1>
           </div>
-
           <LogoutButton />
         </header>
 
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+        <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-6">
           <div className="flex items-center">
             <h1 className="font-semibold text-lg md:text-2xl">Profile</h1>
           </div>
-          <div className="flex flex-col md:grid gap-6">
-            <div className="col-span-3 flex flex-col gap-6">
+          <div className="flex">
+            <div className="flex-1 mx-2 gap-6">
               <div className="rounded-lg bg-white text-gray-950 shadow-lg">
                 <div className="flex flex-col space-y-1.5 p-3 bg-gray-200 rounded-t-lg">
                   <h3 className="text-2xl font-semibold leading-none tracking-tight">
@@ -141,7 +165,85 @@ function UpdateProfile() {
                 </div>
               </div>
             </div>
+
+            {/*second div*/}
+            <div className="flex-1 mx-2 gap-6 rounded-lg bg-white text-gray-950 shadow-lg">
+              <div className="flex flex-col space-y-1.5 p-3 bg-gray-200 rounded-t-lg">
+                <h3 className="text-2xl font-semibold leading-none tracking-tight">
+                  User Details
+                </h3>
+              </div>
+
+              <p className="text-center italic text-lg text-gray-500">
+                Here are the details of the user.
+              </p>
+
+              <div className="p-6 pt-3">
+                <div className="inline-flex items-baseline mt-6">
+                  <h2 className="text-3xl font-semibold">Name:</h2>
+                  <p className="text-2xl ml-2 text-gray-500 italic">
+                    {user.firstName} {user.lastName}
+                  </p>
+                </div>
+                <div className="inline-flex items-baseline mt-4">
+                  <h2 className="text-3xl font-semibold">Email:</h2>
+                  <p className="text-2xl ml-2 text-gray-500 italic">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <aside className="flex-1 bg-white p-4">
+            <div className="flex items-center justify-center">
+              <div className="w-16 h-16 bg-gray-300 rounded-full" />
+            </div>
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold">User Details</h3>
+              <p className="text-sm text-gray-500">
+                Here are the details of the user.
+              </p>
+              <div className="mt-4">
+                <p className="text-sm font-medium">Name:</p>
+                <p className="text-sm">
+                  {user.firstName} {user.lastName}
+                </p>
+              </div>
+              <div className="mt-2">
+                <p className="text-sm font-medium">Email:</p>
+                <p className="text-sm">john.doe@example.com</p>
+              </div>
+              <div className="mt-2">
+                <p className="text-sm font-medium">Role:</p>
+                <p className="text-sm">Admin</p>
+              </div>
+            </div>
+          </aside>
+
+          {/* <div className="w-64 bg-white p-4"> */}
+          {/*   <div className="flex items-center justify-center"> */}
+          {/*     <div className="w-16 h-16 bg-gray-300 rounded-full" /> */}
+          {/*   </div> */}
+          {/*   <div className="mt-4"> */}
+          {/*     <h3 className="text-lg font-semibold">User Details</h3> */}
+          {/*     <p className="text-sm text-gray-500"> */}
+          {/*       Here are the details of the user. */}
+          {/*     </p> */}
+          {/*     <div className="mt-4"> */}
+          {/*       <p className="text-sm font-medium">Name:</p> */}
+          {/*       <p className="text-sm">John Doe</p> */}
+          {/*     </div> */}
+          {/*     <div className="mt-2"> */}
+          {/*       <p className="text-sm font-medium">Email:</p> */}
+          {/*       <p className="text-sm">john.doe@example.com</p> */}
+          {/*     </div> */}
+          {/*     <div className="mt-2"> */}
+          {/*       <p className="text-sm font-medium">Role:</p> */}
+          {/*       <p className="text-sm">Admin</p> */}
+          {/*     </div> */}
+          {/*   </div> */}
+          {/* </div> */}
         </main>
       </div>
     </div>
