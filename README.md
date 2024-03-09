@@ -2,6 +2,15 @@
 
 Paytm like application that let’s users send money to each other given an initial dummy balance.
 
+### Preview
+
+![image](https://github.com/abhirajthakur/Paytm/assets/72484943/a9ccf9e7-fba4-4a79-9bb3-96ffbaa996c4)
+![image](https://github.com/abhirajthakur/Paytm/assets/72484943/a4071426-774b-456b-9bbe-f3fdac3f873e)
+![image](https://github.com/abhirajthakur/Paytm/assets/72484943/96fd6bfc-00bf-4ac5-a87a-cbcb1f95f757)
+![image](https://github.com/abhirajthakur/Paytm/assets/72484943/6d3b5c00-6c06-4010-be1c-581c06b916dc)
+
+You can visit the site by going to this link [https://paytm-abhirajthakur.vercel.app/signup](https://paytm-abhirajthakur.vercel.app/signup)
+
 ### Technologies Used:
 
 ##### Backend
