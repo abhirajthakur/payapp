@@ -23,7 +23,7 @@ const signinSchema = zod.object({
 const updateSchema = zod.object({
   firstName: zod.string().optional(),
   lastName: zod.string().optional(),
-  password: zod.string().min(8).optional(),
+  password: zod.string().min(8).optional().or(zod.literal("")),
 });
 
 const secret = process.env.JWT_SECRET;
