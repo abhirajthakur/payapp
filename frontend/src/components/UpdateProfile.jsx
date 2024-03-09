@@ -43,6 +43,7 @@ function UpdateProfile() {
         },
       );
 
+      await getUser();
       notifySuccess(data.message);
     } catch (err) {
       if (err.response) {
@@ -194,56 +195,6 @@ function UpdateProfile() {
               </div>
             </div>
           </div>
-
-          <aside className="flex-1 bg-white p-4">
-            <div className="flex items-center justify-center">
-              <div className="w-16 h-16 bg-gray-300 rounded-full" />
-            </div>
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold">User Details</h3>
-              <p className="text-sm text-gray-500">
-                Here are the details of the user.
-              </p>
-              <div className="mt-4">
-                <p className="text-sm font-medium">Name:</p>
-                <p className="text-sm">
-                  {user.firstName} {user.lastName}
-                </p>
-              </div>
-              <div className="mt-2">
-                <p className="text-sm font-medium">Email:</p>
-                <p className="text-sm">john.doe@example.com</p>
-              </div>
-              <div className="mt-2">
-                <p className="text-sm font-medium">Role:</p>
-                <p className="text-sm">Admin</p>
-              </div>
-            </div>
-          </aside>
-
-          {/* <div className="w-64 bg-white p-4"> */}
-          {/*   <div className="flex items-center justify-center"> */}
-          {/*     <div className="w-16 h-16 bg-gray-300 rounded-full" /> */}
-          {/*   </div> */}
-          {/*   <div className="mt-4"> */}
-          {/*     <h3 className="text-lg font-semibold">User Details</h3> */}
-          {/*     <p className="text-sm text-gray-500"> */}
-          {/*       Here are the details of the user. */}
-          {/*     </p> */}
-          {/*     <div className="mt-4"> */}
-          {/*       <p className="text-sm font-medium">Name:</p> */}
-          {/*       <p className="text-sm">John Doe</p> */}
-          {/*     </div> */}
-          {/*     <div className="mt-2"> */}
-          {/*       <p className="text-sm font-medium">Email:</p> */}
-          {/*       <p className="text-sm">john.doe@example.com</p> */}
-          {/*     </div> */}
-          {/*     <div className="mt-2"> */}
-          {/*       <p className="text-sm font-medium">Role:</p> */}
-          {/*       <p className="text-sm">Admin</p> */}
-          {/*     </div> */}
-          {/*   </div> */}
-          {/* </div> */}
         </main>
       </div>
     </div>
