@@ -30,18 +30,18 @@ You can visit the site by going to this link [https://paytm-abhirajthakur.vercel
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/abhirajthakur/Paytm
-cd Paytm
+git clone https://github.com/abhirajthakur/payapp
+cd payapp
 ```
 
-### 2. Navigate to the frontend directory in Paytm
+### 2. Navigate to the frontend directory in payapp
 
 ```bash
 cd frontend
 npm install
 ```
 
-### 3. Navigate to the backend directory in Paytm
+### 3. Navigate to the backend directory in payapp
 
 ```bash
 cd backend
