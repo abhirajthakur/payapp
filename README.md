@@ -9,7 +9,7 @@ Paytm like application that let’s users send money to each other given an init
 ![image](https://github.com/abhirajthakur/Paytm/assets/72484943/96fd6bfc-00bf-4ac5-a87a-cbcb1f95f757)
 ![image](https://github.com/abhirajthakur/Paytm/assets/72484943/6d3b5c00-6c06-4010-be1c-581c06b916dc)
 
-You can visit the site by going to this link [https://paytm-abhirajthakur.vercel.app/signup](https://paytm-abhirajthakur.vercel.app/signup)
+You can visit the site by going to this link [https://payapp-mocha.vercel.app/signup](https://payapp-mocha.vercel.app/signup)
 
 ### Technologies Used:
 
